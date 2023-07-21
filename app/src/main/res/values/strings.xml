@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">This is From String</string>
+    <string name="app_name2">This is From String</string>
+    <string name="app_name3">This is From String</string>
+</resources>
