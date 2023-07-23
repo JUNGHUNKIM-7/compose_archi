@@ -109,6 +109,16 @@ Text(
 
 
 Spacer(modifier = Modifier.padding(vertical = 16.dp))
+
+// center
+Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    CircularProgressIndicator()
+}
+
+LazyColumn(
+    modifier = Modifier.fillMaxWidth(),
+    horizontalAlignment = Alignment.CenterHorizontally
+) {}
 ```
 
 # nested
@@ -409,6 +419,14 @@ fun ScrollBody(
 fun FetchButton(vm: PostViewModel = koinViewModel()) {
 }
 
+```
+
+# collectAsStateWithLifecycle
+
+.
+
+```kotlin
+implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-beta01")
 ```
 
 # serialize

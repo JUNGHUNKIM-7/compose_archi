@@ -51,19 +51,22 @@ dependencies {
     def nav_version = "2.5.3"
     def ktor_version = "2.3.2"
     def koin_version = "3.4.5"
+    def lifecycle_version = "2.5.1"
 
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
     implementation "io.insert-koin:koin-androidx-compose:$koin_version"
 
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1"
-    
+
     implementation "io.ktor:ktor-client-core:$ktor_version"
     implementation "io.ktor:ktor-client-cio:$ktor_version"
     implementation "io.ktor:ktor-client-content-negotiation:$ktor_version"
     implementation "io.ktor:ktor-serialization-kotlinx-json:$ktor_version"
 
     implementation "io.coil-kt:coil-compose:2.4.0"
+
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-beta01")
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'

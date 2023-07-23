@@ -6,10 +6,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -71,16 +72,23 @@ fun PostsScreen(
     navController: NavController,
     postViewModel: PostViewModel = koinViewModel()
 ) {
+    val state by postViewModel.postsUiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         postViewModel.invoke(PostUiEvent.Fetch)
     }
 
-    when (val state = postViewModel.postsUiState.collectAsState().value) {
-        is PostUiState.Loading -> CircularProgressIndicator()
+    when (state) {
+        is PostUiState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+
         is PostUiState.LoadedPosts ->
-            LazyColumn {
-                state.posts?.let {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                (state as PostUiState.LoadedPosts).posts?.let {
                     items(it.size) {
                         Button(onClick = {
                             navController.navigate("posts/${it}")
@@ -91,7 +99,7 @@ fun PostsScreen(
                 }
             }
 
-        is PostUiState.Error -> Text(state.message)
+        is PostUiState.Error -> Text((state as PostUiState.Error).message)
         else -> {}
     }
 }
@@ -102,7 +110,6 @@ fun PostScreen(
     param: String?,
     postViewModel: PostViewModel = koinViewModel()
 ) {
-
     LaunchedEffect(Unit) {
         postViewModel.invoke(PostUiEvent.FetchSingle, param)
     }
@@ -116,7 +123,7 @@ fun PostScreen(
             ) {
                 Text("back")
             }
-            when (val state = postViewModel.postUiState.collectAsState().value) {
+            when (val state = postViewModel.postUiState.collectAsStateWithLifecycle().value) {
                 is PostUiState.Loading -> CircularProgressIndicator()
                 is PostUiState.LoadedPost -> Text("${state.post}")
                 is PostUiState.Error -> Text(state.message)
@@ -125,4 +132,3 @@ fun PostScreen(
         }
     }
 }
-
