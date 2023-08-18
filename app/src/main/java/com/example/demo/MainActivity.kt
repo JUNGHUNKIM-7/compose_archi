@@ -10,6 +10,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -42,6 +44,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
+
             DemoTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
@@ -72,13 +75,11 @@ fun PostsScreen(
     navController: NavController,
     postViewModel: PostViewModel = koinViewModel()
 ) {
-    val state by postViewModel.postsUiState.collectAsStateWithLifecycle()
-
     LaunchedEffect(Unit) {
-        postViewModel.invoke(PostUiEvent.Fetch)
+        println(postViewModel(PostUiEvent.Fetch))
     }
 
-    when (state) {
+    when (val state = postViewModel.postsUiState.collectAsStateWithLifecycle().value) {
         is PostUiState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
@@ -88,7 +89,7 @@ fun PostsScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                (state as PostUiState.LoadedPosts).posts?.let {
+                state.posts?.let {
                     items(it.size) {
                         Button(onClick = {
                             navController.navigate("posts/${it}")
@@ -99,7 +100,7 @@ fun PostsScreen(
                 }
             }
 
-        is PostUiState.Error -> Text((state as PostUiState.Error).message)
+        is PostUiState.Error -> Text(state.message)
         else -> {}
     }
 }
@@ -111,7 +112,7 @@ fun PostScreen(
     postViewModel: PostViewModel = koinViewModel()
 ) {
     LaunchedEffect(Unit) {
-        postViewModel.invoke(PostUiEvent.FetchSingle, param)
+        postViewModel(PostUiEvent.FetchSingle, param)
     }
 
     LazyColumn {

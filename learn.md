@@ -423,8 +423,6 @@ fun FetchButton(vm: PostViewModel = koinViewModel()) {
 
 # collectAsStateWithLifecycle
 
-.
-
 ```kotlin
 implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-beta01")
 ```
